@@ -44,7 +44,7 @@ app.get('/health', (req, res) => {
 app.post('/usuario', (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*')
   try {
-    const body = req.body.data
+    const body = req.body
     console.log(body)
     res.status(200).json({
       message: 'Dados recebidos com sucesso',
