@@ -1,0 +1,15 @@
+  <h2>Resposta do Backend:</h2>
+  <pre>
+  <% 
+    set http = Server.CreateObject("MSXML2.ServerXMLHTTP")
+    url = "https://test-connection-agenda-filaatendimento.onrender.com/" 
+    http.Open "GET", url, False
+    http.Send
+    if http.Status = 200 Then
+      Response.Write Server.HTMLEncode(http.responseText)
+    else
+      Response.Write "Erro ao conectar ao backend: " & http.Status
+    end if
+    set http = Nothing
+  %>
+  </pre>

@@ -14,8 +14,20 @@ app.use(
   })
 )
 
+// Middleware para adicionar cabeçalhos CORS manualmente
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+  )
+  next()
+})
+
 app.get('/', (req, res) => {
-  res.json({ 
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.json({
     message: 'Hello World!',
     status: 'Server is running successfully',
     timestamp: new Date().toISOString()
@@ -23,7 +35,8 @@ app.get('/', (req, res) => {
 })
 
 app.get('/health', (req, res) => {
-  res.json({ 
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.json({
     status: 'OK',
     timestamp: new Date().toISOString()
   })
