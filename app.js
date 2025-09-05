@@ -44,10 +44,18 @@ app.get('/health', (req, res) => {
 app.post('/usuario', (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*')
   try {
-    const body = req.body
+    const body = req.body.data
     console.log(body)
+    res.status(200).json({
+      message: 'Dados recebidos com sucesso',
+      status: 'Success'
+    })
   } catch (error) {
     console.error('Erro ao processar a requisição:', error)
+    res.status(400).json({
+      message: 'Erro ao processar a requisição',
+      status: 'Error'
+    })
   }
 })
 app.listen(PORT, () => {
