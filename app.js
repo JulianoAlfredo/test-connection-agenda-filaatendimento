@@ -41,7 +41,15 @@ app.get('/health', (req, res) => {
     timestamp: new Date().toISOString()
   })
 })
-
+app.post('/usuario', (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  try {
+    const body = req.body
+    console.log(body)
+  } catch (error) {
+    console.error('Erro ao processar a requisição:', error)
+  }
+})
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`)
 })
