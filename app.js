@@ -43,6 +43,7 @@ app.get('/health', (req, res) => {
 })
 app.post('/usuario', (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Content-Type', 'application/json')
   try {
     const body = req.body
     console.log(body)
