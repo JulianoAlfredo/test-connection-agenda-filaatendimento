@@ -10,7 +10,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(
   cors({
-    origin: ['*']
+    origin: ['https://www.agendatecnica.com.br/']
   })
 )
 
@@ -47,7 +47,7 @@ app.post('/usuario', (req, res) => {
     const body = req.body
     console.log(body)
     res.status(200).json({
-      message: 'Dados recebidos com sucesso: ' + req.body.data,
+      message: 'Dados recebidos com sucesso: ' + req.body,
       status: 'Success'
     })
   } catch (error) {
