@@ -47,7 +47,7 @@ app.post('/usuario', (req, res) => {
     const body = req.body
     console.log(body)
     res.status(200).json({
-      message: 'Dados recebidos com sucesso',
+      message: 'Dados recebidos com sucesso: ' + req.body.data,
       status: 'Success'
     })
   } catch (error) {
