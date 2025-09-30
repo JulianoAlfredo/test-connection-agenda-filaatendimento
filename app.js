@@ -1,64 +1,38 @@
-const express = require('express')
+import express from 'express'
+import { createServer } from 'http'
+import { Server } from 'socket.io'
+import cors from 'cors'
 
 const app = express()
-const cors = require('cors')
+app.use(cors())
 
-// Usar a porta do ambiente ou 3000 como fallback
-const PORT = process.env.PORT || 3000
-
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-app.use(
-  cors({
-    origin: ['https://www.agendatecnica.com.br/']
-  })
-)
-
-//adiciona pois o frontend estava com erro no cors ao consumir a API
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*')
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-  )
-  next()
-})
-
-app.get('/', (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  res.json({
-    message: 'Hello World!',
-    status: 'Server is running successfully',
-    timestamp: new Date().toISOString()
-  })
-})
-
-app.get('/health', (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  res.json({
-    status: 'OK',
-    timestamp: new Date().toISOString()
-  })
-})
-app.post('/usuario', (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  res.setHeader('Content-Type', 'application/json')
-  try {
-    const body = req.body
-    console.log(body)
-    res.status(200).json({
-      message: 'Dados recebidos com sucesso: ' + req.body,
-      status: 'Success'
-    })
-  } catch (error) {
-    console.error('Erro ao processar a requisição:', error)
-    res.status(400).json({
-      message: 'Erro ao processar a requisição',
-      status: 'Error'
-    })
+const server = createServer(app)
+const io = new Server(server, {
+  cors: {
+    origin: '*' // libera acesso do React
   }
 })
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`)
+
+let fila = []
+
+// Adiciona alguém na fila
+app.get('/add/:nome', (req, res) => {
+  const nome = req.params.nome
+  fila.push({ nome })
+  io.emit('filaAtualizada', fila) // envia para todos conectados
+  res.json({ msg: `Adicionado ${nome}`, fila })
 })
+
+// Retorna a fila atual
+app.get('/fila', (req, res) => {
+  res.json(fila)
+})
+
+// Evento de conexão WebSocket
+io.on('connection', socket => {
+  console.log('Cliente conectado!')
+  socket.emit('filaAtualizada', fila)
+})
+
+const PORT = process.env.PORT || 3000
+server.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`))
